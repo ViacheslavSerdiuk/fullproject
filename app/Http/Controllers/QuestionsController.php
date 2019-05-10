@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Answer;
 use App\Http\Requests\AskQuestionRequest;
+use App\Providers\DateCheckServiceProvider;
 use App\Question;
+use App\Services\Contracts\CustomServiceInterface;
+use App\Services\DateCheck;
+use App\Services\DateCheckNew;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -70,6 +74,7 @@ class QuestionsController extends Controller
     public function show(Question $question)
     {
 
+     //   dd($customService->test());
         $question->increment('views');
         return view('questions.show',compact('question'));
 
@@ -83,6 +88,7 @@ class QuestionsController extends Controller
      */
     public function edit(Question $question)
     {
+
        $this->authorize("update",$question);
 
         return view("questions.edit",compact('question'));
