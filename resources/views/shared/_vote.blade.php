@@ -32,15 +32,19 @@
     </form>
 
 
-@if($model instanceof App\Question)
+    @if ($model instanceof App\Question)
 
-    @include('shared._favorite',[
-    'model' => $model
-    ])
-@elseif($model instanceof App\Answer)
-        @include('shared._accept',[
+        @include ('shared._favorite', [
             'model' => $model
-            ])
-@endif
+        ])
+        @endif
+       @if ($model instanceof App\Answer)
+
+
+
+        @include ('shared._accept', [
+            'model' => $model
+        ])
+    @endif
 
 </div>
