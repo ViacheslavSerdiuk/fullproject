@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -32,10 +33,11 @@
                             <div class="col-4"></div>
                             <div class="col-4"></div>
                             <div class="col-4">
-                                @include('shared._author',[
+                               {{-- @include('shared._author',[
                                    'model' =>$question,
                                    'label' => 'asked'
-                                   ])
+                                   ])--}}
+                                <user-info :model="{{$question}}" label="Asked"></user-info>
                             </div>
                         </div>
                         </div>

@@ -11,25 +11,28 @@ class Question extends Model
 
     protected $fillable = ['title','body'];
 
-    public function user(){
+    protected  $appends = ['created_date'];
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function setTitleAttribute($value){
+    public function setTitleAttribute($value)
+    {
         $this->attributes['title'] = $value;
+
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function getUrlAttribute(){
-
+    public function getUrlAttribute()
+    {
         return route('questions.show',$this->slug);
-
     }
 
-    public function getCreatedDateAttribute(){
-
-    return $this->created_at->diffForHumans();
-
+    public function getCreatedDateAttribute()
+    {
+        return $this->created_at->diffForHumans();
     }
 
     public function getStatusAttribute() {
@@ -44,21 +47,27 @@ class Question extends Model
         return "unanswered";
     }
 
-    public function getBodyHtmlAttribute(){
-
-        return \Parsedown::instance()->text($this->body);
-
+    public function getBodyHtmlAttribute()
+    {
+        return clean($this->bodyHtml());
     }
 
     public function answers()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Answer::class)->orderBy('votes_count','DESC');
     }
 
     public function acceptBestAnswer(Answer $answer)
     {
 
         $this->best_answer_id = $answer->id;
+        $this->save();
+    }
+
+    public function removeBestAnswer(Answer $answer)
+    {
+
+        $this->best_answer_id = null;
         $this->save();
     }
 
@@ -82,5 +91,24 @@ class Question extends Model
     {
         return $this->favorites->count();
     }
+
+
+
+    private function bodyHtml()
+    {
+        return  \Parsedown::instance()->text($this->body);
+    }
+
+    public function excerpt($length)
+    {
+
+        return Str::limit(strip_tags($this->bodyHtml()),$length);
+    }
+
+ /*   public function setBodyAttribute($value)
+    {
+        $this->attributes['body'] = clean($value);
+    }*/
+
 
 }
