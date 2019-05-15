@@ -13,25 +13,26 @@ class Question extends Model
 
     protected  $appends = ['created_date'];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function setTitleAttribute($value){
+    public function setTitleAttribute($value)
+    {
         $this->attributes['title'] = $value;
+
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function getUrlAttribute(){
-
+    public function getUrlAttribute()
+    {
         return route('questions.show',$this->slug);
-
     }
 
-    public function getCreatedDateAttribute(){
-
-    return $this->created_at->diffForHumans();
-
+    public function getCreatedDateAttribute()
+    {
+        return $this->created_at->diffForHumans();
     }
 
     public function getStatusAttribute() {
@@ -60,6 +61,13 @@ class Question extends Model
     {
 
         $this->best_answer_id = $answer->id;
+        $this->save();
+    }
+
+    public function removeBestAnswer(Answer $answer)
+    {
+
+        $this->best_answer_id = null;
         $this->save();
     }
 

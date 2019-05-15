@@ -1,3 +1,4 @@
+<answer :answer="{{$answer}}" inline-template>
 <div class="media post">
     @include('shared._vote',[
              'model'=>$answer,
@@ -40,4 +41,5 @@
 
     </div>
 </div>
+</answer>
 

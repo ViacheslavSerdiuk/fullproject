@@ -24,6 +24,7 @@ class AnswerPolicy
 
     public function accept(User $user, Answer $answer)
     {
+        //if user is owner for question
         return $user->id === $answer->question->user_id;
     }
     /**

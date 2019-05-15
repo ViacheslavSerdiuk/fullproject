@@ -7,11 +7,23 @@ use App\Answer;
 class AcceptAnswerController extends Controller
 {
 
-   public function __invoke(Answer $answer)
+   public function store(Answer $answer)
    {
        $this->authorize('accept',$answer);
-      $answer->question->acceptBestAnswer($answer);
-      return back();
+
+       $answer->question->acceptBestAnswer($answer);
+
+       return back();
+   }
+
+   public function destroy(Answer $answer)
+   {
+
+       $this->authorize('accept',$answer);
+
+       $answer->question->removeBestAnswer($answer);
+
+       return back();
    }
 
 }
