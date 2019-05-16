@@ -76,6 +76,7 @@ class User extends Authenticatable
     public function voteAnswers()
     {
         return $this->morphedByMany(Answer::class,'votable');
+
     }
 
     public function voteQuestion(Question $question,$vote)
