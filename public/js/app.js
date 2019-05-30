@@ -3923,6 +3923,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         (_this$answers = _this.answers).push.apply(_this$answers, _toConsumableArray(data.data));
 
         _this.nextUrl = data.next_page_url;
+        console.log('data' + data);
       });
     }
   },
