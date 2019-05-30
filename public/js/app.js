@@ -3918,6 +3918,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         var _this$answers;
 
         var data = _ref.data;
+        console.log(endpoint);
 
         (_this$answers = _this.answers).push.apply(_this$answers, _toConsumableArray(data.data));
 
