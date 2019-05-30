@@ -10753,3 +10753,40 @@ form.form-delete {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+[v-cloak] {
+  display: none;
+}
+
+img.profile-image {
+  width: 200px;
+  height: 200px;
+}
+
+.ru-4 {
+  display: flex;
+}
+
+.container .profile {
+  display: flex;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+footer {
+  flex: 0 0 auto;
+  padding: 1rem;
+  background: #e6ffe6;
+}
+

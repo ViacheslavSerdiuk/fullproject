@@ -11,7 +11,13 @@ class AnswersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('index');
+    }
+
+    public function index(Question $question){
+
+       return $question->answers()->with('user')->simplePaginate(3);
+
     }
 
     /**
@@ -26,7 +32,17 @@ class AnswersController extends Controller
         $request->validate([
             'body'=>'required',
         ]);
-        $question->answers()->create(['body'=>$request->body,'user_id'=>\Auth::id()]);
+        $answer = $question->answers()->create(['body'=>$request->body,'user_id'=>\Auth::id()]);
+
+        if($request->expectsJson()){
+
+            return response( )->json([
+               'message'=>'Your answer has been submitted',
+               'answer'=>$answer->load('user')
+
+            ]);
+        }
+
         return redirect()->back()->with('success','Your answer has been submitted');
     }
 
@@ -56,9 +72,19 @@ class AnswersController extends Controller
     {
 
         $this->authorize('update',$answer);
+
         $answer->update($request->validate([
             'body'=>'required',
         ]));
+
+        if($request->expectsJson()){
+            return response()->json([
+                'message' => 'Your answer has been updated',
+                'body_html' => $answer->body_html
+            ]);
+        }
+
+
         return redirect()->route('questions.show',$question->slug)->with('success','Your answer has been updated');
     }
 
@@ -68,10 +94,17 @@ class AnswersController extends Controller
      * @param  \App\Answer  $answer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Question $question, Answer $answer)
+    public function destroy(Request $request , Question $question, Answer $answer)
     {
         $this->authorize("delete",$answer);
         $answer->delete();
-        return redirect()->route('questions.show',$question->slug)->with('success','Your answer has been deletec');
+
+        if($request->expectsJson()){
+            return response()->json([
+                'message' => 'Your answer has been deleted',
+            ]);
+        }
+
+        return redirect()->route('questions.show',$question->slug)->with('success','Your answer has been deleted');
     }
 }

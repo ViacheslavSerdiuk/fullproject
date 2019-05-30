@@ -9,18 +9,19 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
+        <i class="fa fa-lock"></i>
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -33,7 +34,11 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        @if(Auth::check())
+                        @if(Auth::user()->is_admin)
+                            <li><a href="/admin" class="btn btn-outline-secondary">Admin panel</a></li>
+                        @endif
+                            @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -49,7 +54,11 @@
                                 </li>
                             @endif
                         @else
+
+                            <a href="/profile" class="btn btn-outline-secondary">My profile</a>
                             <li class="nav-item dropdown">
+
+
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
@@ -76,5 +85,14 @@
             @yield('content')
         </main>
     </div>
+    <!-- Scripts -->
+
+    <script>
+        window.Auth = {!! json_encode([
+            'signedIn' => Auth::check(),
+            'user' => Auth::user()
+        ]) !!}
+    </script>
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

@@ -22,6 +22,7 @@ class CreateQuestionsTable extends Migration
             $table->unsignedInteger('best_answer_id')->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
+            //on delete user question also will be removed
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
         });

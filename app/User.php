@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Str;
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'user_avatar','password'
     ];
 
     protected $appends = ['url','avatar'];
@@ -41,12 +42,13 @@ class User extends Authenticatable
     ];
 
     public function questions(){
+
         return $this->hasMany(Question::class);
     }
 
     public function getUrlAttribute(){
 
-        return '#';
+        return '/profile/'.$this->id;
 
     }
     public function answers()
@@ -57,10 +59,8 @@ class User extends Authenticatable
 
     public function getAvatarAttribute()
     {
-        $email = $this->email;
 
-        $size = 34;
-        return "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?s=" . $size;
+        return $this->getImage();
     }
 
     public function favorites()
@@ -83,7 +83,7 @@ class User extends Authenticatable
     {
         $voteQuestions = $this->voteQuestions();
 
-        $this->_vote($voteQuestions,$question,$vote);
+       return $this->_vote($voteQuestions,$question,$vote);
 
     }
 
@@ -91,7 +91,7 @@ class User extends Authenticatable
     {
         $voteAnswers = $this->voteAnswers();
 
-        $this->_vote($voteAnswers,$answer,$vote);
+       return $this->_vote($voteAnswers,$answer,$vote);
 
     }
 
@@ -110,5 +110,80 @@ class User extends Authenticatable
 
         $model->votes_count = $upVotes + $downVotes;
         $model->save();
+
+        return $model->votes_count;
+    }
+
+    public function getImage()
+    {
+        if($this->user_avatar == null)
+        {
+            return '/img/no-image.png';
+        }
+        return '/uploads/'.$this->user_avatar;
+    }
+
+    public function uploadAvatar($image){
+
+
+        if($image == null) { return; }
+
+
+        $this->removeAvatar();
+        $filename = Str::random(10).'.'.$image->extension();
+        $image->storeAs('uploads',$filename);
+        $this->user_avatar =$filename;
+        $this->save();
+
+    }
+
+    public function removeAvatar()
+    {
+        if($this->user_avatar != null)
+        {
+            Storage::delete('uploads/' . $this->user_avatar);
+        }
+    }
+
+    public function edit($fields)
+    {
+        $this->fill($fields);
+
+        $this->save();
+    }
+
+    public function generatePassword($password)
+    {
+        if($password != null)
+        {
+            $this->password = bcrypt($password);
+            $this->save();
+        }
+    }
+
+    public function countQuestions()
+    {
+        return $this->questions()->count();
+    }
+
+    public function countAnswers()
+    {
+        return $this->answers()->count();
+    }
+
+    public static function add($fields)
+    {
+        $user = new static;
+        $user->fill($fields);
+
+        $user->save();
+
+        return $user;
+    }
+
+    public function remove()
+    {
+        $this->removeAvatar();
+        $this->delete();
     }
 }
