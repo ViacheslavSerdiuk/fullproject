@@ -35,10 +35,10 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         @if(Auth::check())
-                        @if(Auth::user()->is_admin)
+                       {{-- @if(Auth::user()->is_admin)--}}
                             <li><a href="/admin" class="btn btn-outline-secondary">Admin panel</a></li>
                         @endif
-                            @endif
+                           {{-- @endif--}}
                     </ul>
 
                     <!-- Right Side Of Navbar -->
