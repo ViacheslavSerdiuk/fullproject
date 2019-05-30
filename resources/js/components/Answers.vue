@@ -63,8 +63,10 @@
             fetch(endpoint){
                 axios.get(endpoint)
                     .then(({data})=>{
+                        console.log(endpoint);
                         this.answers.push(...data.data);
                         this.nextUrl = data.next_page_url;
+
 
                     })
 
