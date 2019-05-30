@@ -42,7 +42,7 @@
         },
 
         created (){
-
+            console.log(this.nextUrl);
            this.fetch(`/questions/${this.questionId}/answers`);
 
 
@@ -63,10 +63,9 @@
             fetch(endpoint){
                 axios.get(endpoint)
                     .then(({data})=>{
-                        console.log(endpoint);
+
                         this.answers.push(...data.data);
-                        this.nextUrl = data.next_page_url;
-                        console.log('data'+ data);
+                        this.nextUrl = data.next_page_url.replace(/^http:\/\//i, 'https://');
 
                     })
 
